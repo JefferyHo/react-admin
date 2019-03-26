@@ -1,0 +1,38 @@
+
+.normal {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: normal;
+  letter-spacing: -1px;
+  background: darkslateblue;
+  padding: .6em 0;
+  color: white;
+  margin: 0;
+}
+
+.head-light {
+  background: #fff;
+}
+
+.logo {
+  background: lightskyblue;
+  text-align: center;
+  padding: 11px 0;
+}
+
+.logo img {
+  vertical-align: bottom;
+}
+
+.title {
+  display: inline;
+  background: transparent;
+  font-size: 28px;
+  padding-left: .5em;
+  letter-spacing: 1px;
+  color: #fff;
+}
