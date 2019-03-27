@@ -1,4 +1,3 @@
-import routes from '@/config/routers.js';
 // ref: https://umijs.org/config/
 export default {
   treeShaking: true,
@@ -23,4 +22,11 @@ export default {
       },
     }],
   ],
+  proxy: {
+    "/api": {
+      "target": "http://127.0.0.1:3000/",
+      "changeOrigin": true,
+      "pathRewrite": { "^/api": ""}
+    }
+  }
 }

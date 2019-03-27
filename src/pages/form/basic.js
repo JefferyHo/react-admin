@@ -1,57 +1,57 @@
 import React, { PureComponent } from 'react';
-import {
-  AutoComplete,
-  Checkbox,
-  Cascader,
-  DatePicker,
-  Form,
-  InputNumber,
-  Input,
-  Mention,
-  Rate,
-  Radio,
-  Switch,
-  Slider,
-  Select,
-  TreeSelect,
-  Transfer,
-  TimePicker,
-  Upload,
-} from 'antd';
+import { connect } from 'dva'; 
+import Form from '@/components/Forms';
 
-const FormItem = Form.Item;
-
-@Form.create()
+@connect()
 class BasicForms extends PureComponent {
-  render () {
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 7 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
-        md: { span: 10 },
+  handleSubmit = data => {
+    console.log(data);
+    return;
+    /* e.preventDefault();
+    const { form, dispatch } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      if (err) {
+        throw err;
+        return;
       }
-    };
+      console.log(values);
+    }) */
+  }
 
-    console.log(1111);
+  render () {
+    const formList = [
+      {
+        type: 'input',
+        label: '用户名',
+        field: 'name',
+        required: true
+      },
+      {
+        type: 'password',
+        label: '密码',
+        field: 'password',
+        rules: [
+          { required: true, message: '请输入密码' },
+          { min: 8, message: '密码长度最少8位' },
+          { max: 16, message: '密码最大长度16位'}
+        ]
+      },
+      /* {
+        type: 'select',
+        label: '渠道',
+        field: 'from',
+        intialValue: 1
+      },
+      {
+        type: 'checkbox',
+        label: 'Check',
+        field: 'keep',
+        intialValue: true
+      } */
+    ];
 
-    const submitFormLayout = {
-      xs: { span: 24 },
-      sm: { span: 10, offset: 7 }
-    };
-
-    const {
-      form: { getFieldDecorator, getFieldValue },
-    } = this.props;
     return (
-      <Form {...formItemLayout}>
-        <FormItem label="智能输入">
-          {getFieldDecorator('autoComplete')(<AutoComplete datasource={['12345', '23456', '34567', '45678', '56789']} />)}
-        </FormItem>
-      </Form>
+      <Form formList={formList} formSubmit={this.handleSubmit} />
     )
   }
 }
