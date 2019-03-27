@@ -6,16 +6,6 @@ import Form from '@/components/Forms';
 class BasicForms extends PureComponent {
   handleSubmit = data => {
     console.log(data);
-    return;
-    /* e.preventDefault();
-    const { form, dispatch } = this.props;
-    form.validateFieldsAndScroll((err, values) => {
-      if (err) {
-        throw err;
-        return;
-      }
-      console.log(values);
-    }) */
   }
 
   render () {
