@@ -34,8 +34,21 @@ const getFormList = (req, res) => {
     wrapResult(res, 200, mockData);
 } 
 
+const getCompany = (req, res) => {
+    const mockData = Mock.mock({
+        'result|5-20': [
+            {
+                'value': '@guid',
+                'label': '@province@cword(5, 8)有限责任公司'
+            }
+        ]
+    })["result"];
+     wrapResult(res, 200, mockData);
+}
+
 const proxy = {
-    'GET /api/formList': getFormList
+    'GET /api/formList': getFormList,
+    'GET /api/getCompany': getCompany
 }
 
 export default delay(proxy, 1000);

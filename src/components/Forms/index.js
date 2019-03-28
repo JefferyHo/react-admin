@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { get_d, get } from '@/utils/request';
+import debounce from 'lodash/debounce';
+import locale from 'antd/lib/date-picker/locale/zh_CN';
 import {
-  AutoComplete,
   Checkbox,
   Cascader,
   DatePicker,
@@ -18,9 +20,44 @@ import {
   TimePicker,
   Upload,
   Button,
+  Spin
 } from 'antd';
 
 const FormItem = Form.Item;
+const Option = Select.Option;
+
+class SelectRemote extends React.PureComponent {
+    state = {
+        fetching: false,
+        list: []
+    }
+
+    async fetch (v) {
+        const { url } = this.props;
+        this.setState({ list: [], fetching: true });
+        const data = await get(url, {value: v});
+        this.setState({ list: data, fetching: false });
+    }
+
+    handleChange (v) {
+        const { onChange } = this.props;
+        onChange(v);
+    }
+
+    render () {
+        const { fetching, list } = this.state;
+        const { onChange, ...others } = this.props;
+        return <Select  
+                allowClear
+                showSearch={true}
+                { ...others }
+                notFoundContent	={ fetching ? <Spin size="small" /> : null} 
+                onSearch={debounce(this.fetch.bind(this), 300)} 
+                onChange={this.handleChange.bind(this)} >
+                    { list.map(d => <Option key={d.value} value={d.value}>{d.label}</Option>) }
+            </Select>;
+    }
+}
 
 class FormElem extends React.PureComponent {
     handleChange (v) {
@@ -29,10 +66,24 @@ class FormElem extends React.PureComponent {
     }
 
     render () {
-        const { type, ...others } = this.props;
+        const { type, data, url, ...others } = this.props;
+        
         switch(type) {
-            case 'input': return <Input {...others} onChange={this.handleChange.bind(this)} />; 
-            case 'password':return <Input.Password {...others} onChange={this.handleChange.bind(this)} />;
+            case 'input': 
+                return <Input {...others} onChange={this.handleChange.bind(this)} />; 
+            case 'password':
+                return <Input.Password {...others} onChange={this.handleChange.bind(this)} />;
+            case 'select': 
+                return <Select {...others} allowClear onChange={this.handleChange.bind(this)}>
+                    { data.map(d => <Option key={d.value} value={d.value}>{d.label}</Option>) }
+                </Select>;
+            case 'selectRemote': 
+                return <SelectRemote url={url} {...others} onChange={this.handleChange.bind(this)} />;
+            case 'checkbox': 
+                console.log(data, typeof data);
+                return <Checkbox.Group options={data} {...others} onChange={this.handleChange.bind(this)} />;
+            case 'datepicker':
+                return <DatePicker locale={locale} {...others} onChange={this.handleChange.bind(this)} />;
             default: return null;
         }
     }
@@ -46,6 +97,16 @@ class MyForm extends Component {
         this.state = {};
     }
 
+    // pre-handle initial value
+    handleInitialValue = (type, initVal) => {
+        let val;
+        switch (type) {
+            case 'checkbox': val = []; break;
+            case 'datepicker': val = undefined; break;
+        }
+        return initVal || val;
+    }
+
     initFormList = () => {
         const { formList, form: { getFieldDecorator } } = this.props;
         let formItemList = [];
@@ -55,11 +116,13 @@ class MyForm extends Component {
                 let { 
                     initialValue = "",
                     label,
-                    placeholder,
                     field,
-                    type,
                     required,
-                    rules = []
+                    rules = [],
+                    type,
+                    placeholder,
+                    data = [],
+                    url,
                 } = item;
 
                 if (required) {
@@ -69,10 +132,12 @@ class MyForm extends Component {
                     })
                 }
 
+                initialValue = this.handleInitialValue(type, initialValue);
+
                 return <FormItem label={label} key={field}>
                     { getFieldDecorator(field, { initialValue, rules })(
                         // <Input placeholder={placeholder} />
-                        <FormElem type={type} placeholder={placeholder} />
+                        <FormElem type={type} placeholder={placeholder} data={data} url={url} />
                     ) }
                 </FormItem>                
             });
