@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  AutoComplete,
   Checkbox,
   Cascader,
   DatePicker,
@@ -18,20 +19,22 @@ import {
   Upload,
   Button,
 } from 'antd';
-import AutoComplete from '@/components/Forms/AutoComplete';
 
 const FormItem = Form.Item;
 
 class FormElem extends React.PureComponent {
+    handleChange (v) {
+        const { onChange } = this.props; 
+        onChange(v);
+    }
+
     render () {
-        const { type, placeholder } = this.props;
-        let ele;
+        const { type, ...others } = this.props;
         switch(type) {
-            case 'input': ele = <Input placeholder={placeholder} />; break;
-            case 'password': ele = <Input.Password placeholder={placeholder} />;break;
-            default: ele = ''
+            case 'input': return <Input {...others} onChange={this.handleChange.bind(this)} />; 
+            case 'password':return <Input.Password {...others} onChange={this.handleChange.bind(this)} />;
+            default: return null;
         }
-        return ele;
     }
 }
 
@@ -82,7 +85,7 @@ class MyForm extends Component {
         const { form, formSubmit } = this.props;
         form.validateFieldsAndScroll((err, values) => {
             if (err) {
-                throw err;
+                // throw err;
                 return;
             }
             formSubmit(values);

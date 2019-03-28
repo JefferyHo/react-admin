@@ -1,11 +1,18 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva'; 
 import Form from '@/components/Forms';
-
+ 
 @connect()
 class BasicForms extends PureComponent {
+  state = {
+  }
+
   handleSubmit = data => {
     console.log(data);
+  }
+
+
+  componentDidMount () {
   }
 
   render () {
@@ -26,18 +33,30 @@ class BasicForms extends PureComponent {
           { max: 16, message: '密码最大长度16位'}
         ]
       },
-      /* {
+      {
         type: 'select',
-        label: '渠道',
-        field: 'from',
-        intialValue: 1
+        label: '选择用户',
+        field: 'user',
+        static: true,
+        data: [
+          { value: 'jack', title: 'Jack' },
+          { value: 'lucy', title: 'Lucy' },
+          { value: 'tom', title: 'Tom' },
+        ]
+      },
+      {
+        type: 'select',
+        label: '选择用户',
+        field: 'user',
+        static: false,
+        url: '/api/getUserList'
       },
       {
         type: 'checkbox',
         label: 'Check',
         field: 'keep',
         intialValue: true
-      } */
+      }
     ];
 
     return (

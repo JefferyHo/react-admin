@@ -18,6 +18,7 @@ axios.interceptors.response.use(response => {
 
 const handleServerData = (data) => {
     if (data.status === 200) {
+        console.log(data.result);
         return data.result;
     }
     message.error(data.msg);
