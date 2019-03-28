@@ -1,28 +1,19 @@
 import React, { Component } from 'react';
-import { get_d, get } from '@/utils/request';
+import { get } from '@/utils/request';
 import debounce from 'lodash/debounce';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import {
   Checkbox,
-  Cascader,
   DatePicker,
   Form,
-  InputNumber,
   Input,
-  Mention,
-  Rate,
-  Radio,
-  Switch,
-  Slider,
   Select,
-  TreeSelect,
-  Transfer,
-  TimePicker,
-  Upload,
   Button,
   Spin
 } from 'antd';
-
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -80,10 +71,11 @@ class FormElem extends React.PureComponent {
             case 'selectRemote': 
                 return <SelectRemote url={url} {...others} onChange={this.handleChange.bind(this)} />;
             case 'checkbox': 
-                console.log(data, typeof data);
                 return <Checkbox.Group options={data} {...others} onChange={this.handleChange.bind(this)} />;
             case 'datepicker':
                 return <DatePicker locale={locale} {...others} onChange={this.handleChange.bind(this)} />;
+            case 'datetimepicker':
+                return <DatePicker locale={locale} {...others} showTime onChange={this.handleChange.bind(this)} />;
             default: return null;
         }
     }
@@ -103,6 +95,8 @@ class MyForm extends Component {
         switch (type) {
             case 'checkbox': val = []; break;
             case 'datepicker': val = undefined; break;
+            case 'datetimepicker': val = undefined; break;
+            default: val = "";
         }
         return initVal || val;
     }
@@ -157,6 +151,10 @@ class MyForm extends Component {
         })
     }
 
+    handleReset = () => {
+        this.props.form.resetFields();
+    }
+
     render () {
         const { 
             formItemLayout = {
@@ -183,6 +181,9 @@ class MyForm extends Component {
             <FormItem {...submitFormLayout} style={{ marginTop: 16 }}>
                 <Button type="primary" htmlType="submit">
                     提交
+                </Button>
+                <Button type="default" onClick={this.handleReset.bind(this)} style={{ marginLeft: 30 }}>
+                    重置
                 </Button>
             </FormItem>
         </Form>

@@ -78,7 +78,8 @@ class BasicForms extends PureComponent {
         type: 'datetimepicker',
         label: '启用时间',
         field: 'open_state'
-      }
+      },
+      
       /* {
         type: 'select',
         label: '选择用户',

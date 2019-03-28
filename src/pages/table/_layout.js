@@ -4,11 +4,9 @@ import withRouter from 'umi/withRouter';
 
 class Layout extends React.Component {
     componentDidMount () {
-        console.log('table_layout mounted');
     }
 
     render () {
-        console.log(this.props);
         return(
             <div>
                 <Breadcrumb />

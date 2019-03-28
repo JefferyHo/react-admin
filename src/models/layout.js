@@ -2,7 +2,7 @@ export default {
     namespace: 'layout',
 
     state: {
-        mode: 'horizontal',
+        mode: 'inline',
         theme: 'dark'
     },
 
